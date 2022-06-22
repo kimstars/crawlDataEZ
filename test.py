@@ -1,24 +1,34 @@
 import requests
-import csv
+import pandas as pd
 
-row = []
+name = []
+toan = []
+van = []
+anh = []
 
 id = 130000
-for i in range(1,441):
-    id += 1
-    link = "http://tracuudiem.thi.phutho.vn/Home/TraCuu?MaNhom=TS10%202021-2022&SoBD="+ str(id)
-    res = requests.get(link)
-    data = res.json()
-    line = ""
-    line = data[0]['TenMon'] + "," + data[1]['Diem']   + "," +  data[2]['Diem']   + "," + data[3]['Diem']
-    row.append(line)
-    print(id)
+for i in range(1,442):
+    try:
+        id += 1
+        link = "http://tracuudiem.thi.phutho.vn/Home/TraCuu?MaNhom=TS10%202022-2023&SoBD="+ str(id)
+        res = requests.get(link)
+        data = res.json()
+        
+        name.append(data[0]['TenMon'])
+        toan.append(data[1]['Diem'])
+        van.append(data[2]['Diem'])
+        anh.append(data[3]['Diem'])
 
+        
+        print(id)
+    except:
+        pass
 
-fields = 'Họ và tên,Toán,Văn,Anh' 
+col1 = "Họ và tên"
+col2 = "Toán"
+col3 = "Văn"
+col4 = "Anh"
 
-with open("temp.csv", mode = "w", encoding="utf-8") as f:
-    f.write(fields)
-    for r in row:
-        f.write("\n")
-        f.write(r)
+data = pd.DataFrame({col1:name,col2:toan,col3:van,col4:anh})
+data.to_excel('data.xlsx', sheet_name='sheet1', index=False)
+
